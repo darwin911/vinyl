@@ -1,0 +1,14 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+}
+
+main {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+}
+
+.progress {
+  width: 300px;
+}
