@@ -1,5 +1,7 @@
 # **Vinyl**
 
+`www.vinyl.music/player`
+
 ## Introduction to your app (description)
 
 Users user music players that provide them with all the options and capabilities that the modern web has to provide. Vinyl does not. It's purpose is to recreate the UX of listening to music on a record player or turntable.
@@ -17,6 +19,7 @@ Users user music players that provide them with all the options and capabilities
 
 - Rails
 - React
+- PostgreSQL
 - Axios
 - Bcrypt
 - Knock
@@ -27,13 +30,13 @@ Users user music players that provide them with all the options and capabilities
 
 ## ERD (images included in the proposal)
 
-[Entity Relationship Diagram](./ERD.jpg)
+![Entity Relationship Diagram](./ERD.jpg)
 
 ## Wireframes (images included in the proposal)
 
-[Wireframe - Main/Player](./wireframe_main.jpg)
+![Wireframe - Main/Player](./wireframe_main.jpg)
 
-[Wireframe - Album](./wireframe_jpg.jpg)
+![Wireframe - Album](./wireframe_album.jpg)
 
 ## M.V.P
 
@@ -53,4 +56,11 @@ Users user music players that provide them with all the options and capabilities
 
 ## Code example with description
 
+`console.log('hello world!)`
+
 ## Installation instructions (at the top of the README)
+
+- `git clone http://github.com/darwin911/vinyl`
+- `bundle install`
+- `cd client`
+- `npm i`
