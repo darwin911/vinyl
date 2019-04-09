@@ -13,7 +13,7 @@ users = {
     password: 'pass',
     picture: 'https://randomuser.me/api/portraits/men/18.jpg'
   },
-  rene: {
+  test: {
     name: 'test',
     email: 'test@test.com',
     password: 'test',
@@ -22,3 +22,11 @@ users = {
 }
 
 User.create(users.values)
+
+first_playlist = {
+  name: 'Wheelz',
+  length: 5,
+  playback_url: '---'
+}
+
+User.first.playlists.create(first_playlist)

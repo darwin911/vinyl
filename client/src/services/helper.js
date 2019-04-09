@@ -19,8 +19,20 @@ const loginUser = async (loginData) => {
   return resp.data
 }
 
+const uploadTrack = async (track) => {
+  const resp = await api.post('/rails/active_storage/direct_uploads', track)
+  return resp.data
+}
+
+const createPlaylist = async (playlistData) => {
+  const resp = await api.post('/users/1/playlists/', playlistData)
+  console.log(resp)
+}
+
 export {
   allUsers,
   createUser,
   loginUser,
+  uploadTrack,
+  createPlaylist,
 };

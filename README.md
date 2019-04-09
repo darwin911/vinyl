@@ -64,3 +64,5 @@ Users user music players that provide them with all the options and capabilities
 - `bundle install`
 - `cd client`
 - `npm i`
+
+> https://medium.com/@fabianopb/upload-files-with-node-and-react-to-aws-s3-in-3-steps-fdaa8581f2bd

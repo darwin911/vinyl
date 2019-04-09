@@ -1,7 +1,9 @@
 class User < ApplicationRecord
+  has_many :playlists
   has_secure_password
   validates :email, presence: true
 
+  
   def to_token_payload
     {
       sub: id,

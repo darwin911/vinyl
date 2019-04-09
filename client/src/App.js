@@ -5,11 +5,19 @@ import Sound from 'react-sound';
 import {
   Button,
   ButtonGroup,
-  Form,
+  // Form,
   Nav,
   Navbar,
+  // FormText,
 } from 'react-bootstrap'
-import { createUser, loginUser } from './services/helper';
+import {
+  createUser,
+  loginUser,
+  uploadTrack,
+  createPlaylist,
+} from './services/helper';
+import Auth from './components/Auth';
+import PlayListForm from './components/PlaylistForm';
 
 class App extends Component {
   constructor() {
@@ -17,20 +25,29 @@ class App extends Component {
     this.state = {
       playStatus: "STOPPED",
       name: '',
-      email: '',
-      password: '',
+      email: 'test@test.com',
+      password: 'test',
       picture: '',
       isLoggedIn: false,
+      playlistName: '',
+      playlistLength: '',
+      files: null,
     }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleLogin = this.handleLogin.bind(this)
     this.play = this.play.bind(this)
+
+    this.handleChange = this.handleChange.bind(this)
+    this.handleRegister = this.handleRegister.bind(this)
+    this.handleLogin = this.handleLogin.bind(this)
+    this.handleLogout = this.handleLogout.bind(this)
+
+    this.handleSubmitPlaylist = this.handleSubmitPlaylist.bind(this)
+
+    this.fileSelectedHandler = this.fileSelectedHandler.bind(this)
+    this.fileUploadHandler = this.fileUploadHandler.bind(this)
   }
 
   async componentDidMount() {
-    // const resp = await allUsers()
-    // console.log(resp)
+    console.log('componentDidMount Called')
   }
 
   handleChange(e) {
@@ -46,10 +63,8 @@ class App extends Component {
     e.preventDefault();
     console.log('handleLogin called')
     const { email, password } = this.state
-    const loginData = {
-      email,
-      password,
-    }
+    const loginData = { email, password, }
+
     try {
       const user = await loginUser(loginData)
       this.setState({
@@ -61,30 +76,23 @@ class App extends Component {
     } catch (error) {
       console.error("INVALID_CREDENTIALS", error)
     }
-
   }
-  
 
-  async handleSubmit(e) {
+  handleLogout(e) {
     e.preventDefault();
-    console.log('handleSubmit Called')
+    this.setState({ isLoggedIn: false })
+  }
+
+  async handleRegister(e) {
+    e.preventDefault();
+    console.log('handleRegister Called')
     const { name, email, password, picture } = this.state;
-    console.log(name, email, password)
-
-    const registerData = {
-      name,
-      email,
-      password,
-      picture,
-    }
-
+    const registerData = { name, email, password, picture }
     const user = await createUser(registerData);
-    console.log(user)
 
     this.setState({
       token: user
     })
-
   }
 
   play() {
@@ -93,7 +101,41 @@ class App extends Component {
       : this.setState({ playStatus: 'PAUSED' })
   }
 
+  fileSelectedHandler(e) {
+    console.log(e.target.files[0])
+    this.setState({
+      files: e.target.files[0]
+    })
+  }
+
+  async fileUploadHandler() {
+    const fd = new FormData()
+    fd.append('avatar', this.state.files, this.state.files.name)
+    const resp = await uploadTrack(this.state.files)
+    console.log(resp);
+  }
+
+  async handleSubmitPlaylist(e) {
+    e.preventDefault();
+    console.log('hello')
+    const { playlistName, playlistLength, files } = this.state
+
+    const playlistData = {
+      name: playlistName,
+      length: 1,
+      avatar: this.state.files,
+      playback_url: "http://www.google.com",
+      user_id: 1,
+    }
+
+    const form = new FormData(playlistData)
+
+    const resp = await createPlaylist(form)
+    console.log(resp)
+  }
+
   render() {
+    const { isLoggedIn, name, email, password, playlistName, playlistLength, files } = this.state
     return (
       <div className="App">
         <header>
@@ -101,51 +143,40 @@ class App extends Component {
             <Navbar.Brand href="#home">Vinyl</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="#home">Home</Nav.Link>
+              {(this.state.isLoggedIn === false)
+                ? <>
+                  <Nav.Link href="#login">Login</Nav.Link>
+                  <Nav.Link href="#register">Register</Nav.Link>
+                </>
+                : <Nav.Link href="home" onClick={this.handleLogout}>Logout</Nav.Link>}
             </Nav>
-            <ButtonGroup>
-              <Button variant="outline-info">Sign In</Button>
-              <Button variant="outline-info">Register</Button>
-            </ButtonGroup>
           </Navbar>
         </header>
         <main>
 
-          {/* <Form onSubmit={this.handleSubmit}>
-            <Form.Group controlId="name">
-              <Form.Control type="text" name="name" placeholder="Your name" onChange={this.handleChange} required />
-            </Form.Group>
+          <PlayListForm
+            fileSelectedHandler={this.fileSelectedHandler}
+            handleChange={this.handleChange}
+            handleSubmitPlaylist={this.handleSubmitPlaylist}
+            files={files}
+            playlistName={playlistName}
+            playlistLength={playlistLength}
+          />
 
-            <Form.Group controlId="email">
-              <Form.Control type="email" name="email" placeholder="Enter email" onChange={this.handleChange} required />
-              <Form.Text className="text-muted">We'll never share your email with anyone else.</Form.Text>
-            </Form.Group>
-
-            <Form.Group controlId="password">
-              <Form.Control type="password" name="password" placeholder="Password" onChange={this.handleChange} required />
-            </Form.Group>
-            <Button variant="primary" type="submit">Register</Button>
-          </Form> */}
-
-          {!this.state.isLoggedIn && <Form onSubmit={this.handleLogin}>
-            <Form.Group controlId="email">
-              <Form.Control type="email" name="email" placeholder="Enter email" onChange={this.handleChange} value={this.state.email} required />
-              <Form.Text className="text-muted">We'll never share your email with anyone else.</Form.Text>
-            </Form.Group>
-
-            <Form.Group controlId="password">
-              <Form.Control type="password" name="password" placeholder="Password" onChange={this.handleChange} value={this.state.password} required />
-            </Form.Group>
-            <Button variant="primary" type="submit">Sign In</Button>
-          </Form>}
-          
-
-
-
+          <Auth
+            isLoggedIn={isLoggedIn}
+            handleRegister={this.handleRegister}
+            handleLogin={this.handleLogin}
+            handleChange={this.handleChange}
+            name={name}
+            email={email}
+            password={password}
+          />
 
           <Sound url={lane8}
             playStatus={this.state.playStatus}>audio</Sound>
           <ButtonGroup>
-            <Button variant="outline-primary" onClick={this.play}>PLAY/PAUSE</Button>
+            <Button variant="outline-primary" onClick={this.play}>Play/Pause</Button>
           </ButtonGroup>
         </main>
       </div>

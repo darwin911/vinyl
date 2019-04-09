@@ -6,7 +6,8 @@
 main {
   display: grid;
   place-items: center;
-  min-height: 100vh;
+  height: 100%;
+  grid-template-rows: minmax(100%, 300px)
 }
 
 .progress {
